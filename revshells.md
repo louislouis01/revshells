@@ -1,5 +1,6 @@
 ```sh
-rlwrap nc -lvnp 4444 # op listener
+rlwrap nc -lvnp 4444 # op listener (arrow keys)
+nc -lvnp 4444 # normal listener
 ```
 # **Windows**
 ### Reverse shells
